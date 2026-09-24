@@ -1,2 +1,2 @@
 # GTViewer
-Gas Turbune Stations Viewer
+Gas Turbune Station Viewer
