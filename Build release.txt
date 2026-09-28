@@ -1,0 +1,4 @@
+.\windeployqt6.exe 
+для сборки релиза необходимо указать на папку где хранится весь проект на qml !!!
+
+PS C:\Qt\6.9.2\mingw_64\bin> .\windeployqt6.exe --release --qmldir C:\Users\Dima\Documents\prj\GTSclient\qml C:\Users\Dima\Documents\prj\GTSclient_Release\GTSclient.exe
