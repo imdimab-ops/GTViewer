@@ -110,6 +110,27 @@ void ParsingData::parsingLogic(TAG &tag, const QString &str, const QVariantMap &
     }
 }
 
+void ParsingData::parsingMTR(MTR &tag, const QString &str, const QVariantMap &map)
+{
+    /* Парсим теги "TAG.MTR.%1.XXX" - тэг со стороны сервера, пишется в сокет только при изменении!!!
+     * если изменения параметра нет, то в протоле его ключ отсутствует
+     * тег "TAG.LOGIC.%1.XXX" состоит из контейнера QVariantMap, который содержив в себе данные по следующим ключам:
+     * - "VALUE" - значение
+     * - "STATUS" - статус данных
+     * - "TIMESTAMP" - метка времени данного значения */
+    const QString prefix = QStringLiteral("TAG.MTR.") % str; //% - QStringBuilder, выделение строки происходит быстрее чем QString("TAG.MTCP.%1").arg(str)
+    if (TagValue v = fetchValue(prefix % QStringLiteral(".STATE"), map); v.value.isValid() && v.timestamp.isValid()) {
+        tag.state = v.value;
+        tag.timestamp = v.timestamp;
+        tag.tagname = QString(QStringLiteral("MTR.") % str); //пишем имя тега для запроса исторических данных
+        emit tagChanged(tag.tagname, TagValue{tag.timestamp, tag.state});
+    }
+    if (TagValue v = fetchValue(prefix % QStringLiteral(".CTLW"), map); v.value.isValid()) tag.ctlw = v.value;
+    if (TagValue v = fetchValue(prefix % QStringLiteral(".DESCRIPTION"), map); v.value.isValid()) tag.description = v.value;
+    if (TagValue v = fetchValue(prefix % QStringLiteral(".MODE"), map); v.value.isValid()) tag.mode = v.value;
+    if (TagValue v = fetchValue(prefix % QStringLiteral(".WORKTIME"), map); v.value.isValid()) tag.worktime = v.value;
+}
+
 void ParsingData::currentData(const QVariantMap &map)
 {
     if (map.isEmpty()) return;
@@ -226,6 +247,10 @@ void ParsingData::currentData(const QVariantMap &map)
     parsingLogic(m_data.STEP_DESCR, "STEP_DESCRIPTION", map);
     parsingLogic(m_data.COUNTDOWN, "COUNTDOWN.RT", map);
 
+    //Motors
+    parsingMTR(m_dataMTR.M201, "M201", map);
+    parsingMTR(m_dataMTR.M202, "M202", map);
+
     if (m_throttleTimer && !m_throttleTimer->isActive()) {
         m_throttleTimer->start();
     }
@@ -234,7 +259,7 @@ void ParsingData::currentData(const QVariantMap &map)
 
 void ParsingData::onThrottleTimer()
 {
-    emit dataUpdated(m_data);
+    emit dataUpdated(m_data, m_dataMTR);
 }
 
 void ParsingData::historyData(const QVariantMap &map)

@@ -121,6 +121,39 @@ public:
     }
 };
 
+//Структура состояния электродвигателя
+struct MTR {
+    Q_GADGET
+    Q_PROPERTY(QVariant timestamp MEMBER timestamp)
+    Q_PROPERTY(QVariant state MEMBER state)
+    Q_PROPERTY(QVariant mode MEMBER mode)
+    Q_PROPERTY(QVariant tagname MEMBER tagname)
+    Q_PROPERTY(QVariant description MEMBER description)
+    Q_PROPERTY(QVariant worktime MEMBER worktime)
+    Q_PROPERTY(QVariant ctlw MEMBER ctlw)
+public:
+    QVariant timestamp;
+    QVariant state;     //emum состояние двигателя (описание в библиотеке PsTechEE Regul)
+    QVariant mode;      //enum фактический режим управления
+    QVariant description;
+    QVariant worktime;  //наработка, ч
+    QVariant ctlw;      //слово сигналов управления
+    QVariant tagname;
+    bool operator==(const MTR &other) const { //оператор сравнения "==", чтобы moc не ругался
+        return timestamp == other.timestamp &&
+               state == other.state &&
+               mode == other.mode &&
+               description == other.description &&
+               worktime == other.worktime &&
+               ctlw == other.ctlw &&
+               tagname == other.tagname;
+    }
+    bool operator!=(const MTR &other) const {
+        return !(*this == other);
+    }
+
+};
+
 //Структура точки для добавления на график
 struct TagValue {
     QVariant timestamp;
@@ -320,6 +353,16 @@ public:
     TAG COUNTDOWN;  //Обратный отсчет шагов
 };
 
+struct DataMTR {
+    Q_GADGET  //Макрос для QML-доступа без наследования от QObject (при обновлении полей структуры не работают сигналы и слоты, обновлять в ручную!)
+    //Насосы
+    Q_PROPERTY(MTR M201 MEMBER M201) //для обновления данных в QML (иначе undefined)
+    Q_PROPERTY(MTR M202 MEMBER M202)
+public:
+    MTR M201;   //насос масла 1
+    MTR M202;   //насос масла 2
+};
+
 class ParsingData : public QObject
 {
     Q_OBJECT
@@ -334,6 +377,7 @@ public:
 private:
     STWsrv m_stw;
     Data m_data;
+    DataMTR m_dataMTR;
     QTimer *m_throttleTimer = nullptr;
 
     void setBit(QVariant &value, const quint8 &bitPosition, const bool &state);
@@ -341,6 +385,7 @@ private:
     void parsingAI(AI &tag, const QString &str, const QVariantMap &map);        //аналоговые параметры
     void parsingMTCP(TAG &tag, const QString &str, const QVariantMap &map);     //данные полученные с ModbusTCP
     void parsingLogic(TAG &tag, const QString &str, const QVariantMap &map);    //данные переменных из алгоритмов (расчетные)
+    void parsingMTR(MTR &tag, const QString &str, const QVariantMap &map);
     void currentData(const QVariantMap &map);
     void onThrottleTimer(); //тротлинг обновлений
     void historyData(const QVariantMap &map);
@@ -351,7 +396,7 @@ public:
     STWsrv getServerSTW(const QVariantMap &map);
 
 signals:
-    void dataUpdated(const Data &);
+    void dataUpdated(const Data &, const DataMTR &);
     void tagChanged(const QVariant &tagname, const TagValue &tagValue); //сигнал для добавления точки на график
     void sendData(const QVariantMap &);
     void addHisoryData(const QVariant &, const QList<TagValue> &);

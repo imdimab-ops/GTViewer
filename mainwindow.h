@@ -73,6 +73,7 @@ public slots:
 
 signals:
     void fdataUpdate(const Data &);
+    void fdataUpdateMTR(const DataMTR &);
 
 };
 #endif // MAINWINDOW_H

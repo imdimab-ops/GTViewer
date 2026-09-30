@@ -32,7 +32,7 @@ signals:
     /* Out */
     void serverUpdated(const STWsrv &);
     void clientUpdated(const STWcli &);
-    void dataUpdated(const Data &);
+    void dataUpdated(const Data &, const DataMTR &);
     void tagChanged(const QVariant &, const TagValue &); //сигнал для добавления точки на график
     void addHisoryData(const QVariant &, const QList<TagValue> &);
     void status(const QString &);

@@ -189,7 +189,7 @@ void MainWindow::setupConnections()
         /* отображаем статусы tcpClient в статус баре manwindow */
         showStatusbarMessage(status);
     });
-    connect(tcpClient, &TcpThread::dataUpdated, this, [this](const Data &data){
+    connect(tcpClient, &TcpThread::dataUpdated, this, [this](const Data &data, const DataMTR &dataMTR){
         QString mode = data.MODE_DESCR.pv.toString();
         QString step = data.STEP_DESCR.pv.toString();
         QString count = QString("count: %1").arg(QString::number(data.COUNTDOWN.pv.toUInt()));
@@ -197,6 +197,7 @@ void MainWindow::setupConnections()
         if (ui->label_STEP_DESCR->text() != step) ui->label_STEP_DESCR->setText(step);
         if (ui->label_COUNTDOWN->text() != count) ui->label_COUNTDOWN->setText(count);
         emit fdataUpdate(data);
+        emit fdataUpdateMTR(dataMTR);
     });
     connect(tcpClient, &TcpThread::tagChanged, this, [this](const QVariant &tagname, const TagValue &tagValue){
         plotWidget->addPointToGraph(tagname, tagValue);
