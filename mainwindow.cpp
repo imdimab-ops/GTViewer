@@ -196,7 +196,7 @@ void MainWindow::setupConnections()
         if (ui->label_MODE_DESCR->text() != mode) ui->label_MODE_DESCR->setText(mode);
         if (ui->label_STEP_DESCR->text() != step) ui->label_STEP_DESCR->setText(step);
         if (ui->label_COUNTDOWN->text() != count) ui->label_COUNTDOWN->setText(count);
-        emit fdataUpdate(data);
+        emit fdataUpdateAI(data);
         emit fdataUpdateMTR(dataMTR);
     });
     connect(tcpClient, &TcpThread::tagChanged, this, [this](const QVariant &tagname, const TagValue &tagValue){

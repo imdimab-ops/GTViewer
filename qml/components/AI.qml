@@ -2,7 +2,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import "./paramLogic.js" as Logic
+import "./paramLogicAI.js" as Logic
 
 Rectangle {
     id: root
@@ -14,6 +14,7 @@ Rectangle {
     opacity: 0.9
 
     //Public свойства для настройки
+    property string type: "AI"
     property string name: "Параметр"  // Название параметра
     property string symbol: "P1"      // Позиционное обозначение
     property real pv: 0.0             // (Process Variable) - текущее значение

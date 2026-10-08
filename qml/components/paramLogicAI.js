@@ -27,7 +27,7 @@ var _propertyConfig = {
     tagname: v => v
 }
 
-//Паспорт
+/* Показываем паспорт параметра */
 function _showPassport(obj, path) {
     if (!obj) return null
 
@@ -39,7 +39,7 @@ function _showPassport(obj, path) {
     }
 
     //создаем новый паспорт
-    var component = Qt.createComponent(path || "PassportParam.qml")
+    var component = Qt.createComponent(path || "PassportParamAI.qml")
     if (component.status === QQml.Component.Ready) {
         passport = component.createObject(obj)
         if (passport) {
@@ -79,8 +79,9 @@ function _showPassport(obj, path) {
     return null
 }
 
+/* !!!свойства каждого элемента obj обновляем из функции handleDataUpdate(arg) connectionsLogic.js */
 function updateData(obj, data) {
-    if (!obj || !data) return
+    if (!obj || obj.type !== "AI" || !data) return
 
     // obj.pv = data.pv !== undefined ? Number(data.pv) : obj.pv;
 
@@ -116,7 +117,7 @@ function updateData(obj, data) {
     }
 }
 
-//Контекстное меню
+/* отображаем контествное меню */
 function showContextMenu(obj, path) {
     if (!obj) return null
 
@@ -132,6 +133,7 @@ function showContextMenu(obj, path) {
         var contextMenu = component.createObject(obj)
         if (contextMenu) {
             //Обновляем данные
+            contextMenu.targetObject = obj
             contextMenu.name = obj.name;
             contextMenu.symbol = obj.symbol;
             contextMenu.addToChart = obj.addTag;
@@ -150,7 +152,7 @@ function showContextMenu(obj, path) {
                 obj.emitAddToChart(data)
             });
             contextMenu.emitShowPassport.connect(function(symbolFromMenu) {
-                _showPassport(obj, "PassportParam.qml")
+                _showPassport(obj, "PassportParamAI.qml")
             });
 
             contextMenu.closed.connect(function() {
@@ -189,11 +191,3 @@ function getProgressColor(obj) {
 function getAlarm(obj) {
     return (obj.stw & 0x02) || (obj.stw & 0x04) || (obj.stw & 0x08)
 }
-
-//Функция снятия визуализации на элементе (при удалении графиков)(визуализация в контекстном меню)
-function updateAddToChartIcon(obj, data) {
-    if (data.symbol === obj.symbol) {
-        obj.addTag = data.addTag
-    }
-}
-

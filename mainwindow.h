@@ -72,7 +72,7 @@ public slots:
     //Set from UI (Frontend)
 
 signals:
-    void fdataUpdate(const Data &);
+    void fdataUpdateAI(const Data &);
     void fdataUpdateMTR(const DataMTR &);
 
 };

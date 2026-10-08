@@ -632,7 +632,7 @@ bool CustomPlotWidget::createdLegend()
 
         //еденицы измерения
         QTableWidgetItem *unitItem = new QTableWidgetItem(graph->property("unit").toString());
-        unitItem->setTextAlignment(Qt::AlignVCenter);
+        unitItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         m_legendTable->setItem(row, 3, unitItem);
 
         //описание

@@ -9,12 +9,18 @@ Menu {
     property string name: ""
     property string symbol: ""
     property bool addToChart: false
+    property var targetObject: null //ссылка на объект - владелец
 
     signal emitAddToChart(string symbol)
     signal emitShowPassport(string symbol)
 
     //Настройка отступов меню
     padding: 2
+
+    function _showItem_1(obj) {
+        if (!obj) return false
+        return obj.type === "AI" | obj.type === "MTR"
+    }
 
     //Заголовок
     MenuItem {
@@ -30,6 +36,7 @@ Menu {
     }
 
     MenuItem {
+        enabled: contextMenu._showItem_1(targetObject)
         text: "Добавить на график"
         icon.source: addToChart ? "img/chartOn.svg" : "img/chartOff.svg"
         icon.width: 20

@@ -74,8 +74,10 @@ qt_add_resources(GTViewer Resources
 
     "qml/components/AI.qml"
     "qml/components/AIpbv.qml"
+    "qml/components/PumpLite.qml"
     "qml/components/ContextMenu.qml"
-    "qml/components/PassportParam.qml"
+    "qml/components/PassportParamAI.qml"
+    "qml/components/PassportParamMTR.qml"
     "qml/components/img/chartOn.svg"
     "qml/components/img/chartOff.svg"
     "qml/components/img/rotate_left.svg"
@@ -93,7 +95,8 @@ qt_add_resources(GTViewer Resources
     "qml/img/gtu/turboFireEx.svg"
 
     "qml/js/connectionsLogic.js"
-    "qml/components/paramLogic.js"
+    "qml/components/paramLogicAI.js"
+    "qml/components/paramLogicMTR.js"
 
     "img/logo_slow.gif"
     "img/logo.ico"

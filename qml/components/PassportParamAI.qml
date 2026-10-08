@@ -1,12 +1,12 @@
 /* components/PassportParam.qml */
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Fusion
 import QtQuick.Layouts
 
 ApplicationWindow {
     id: passportWindow
     width: 400
-    height: 550
+    height: 560
     minimumWidth: 350
     minimumHeight: 400
     title: location + " Паспорт параметра: " + symbol
@@ -33,7 +33,6 @@ ApplicationWindow {
     property string description: "descr"   // Описание
     property string tagname: "tag"    // Имя прочитанного тега (для запроса истории)
     property string location: "Location"
-    property string status: ""
 
     //Функция обновления данных
     function updateData(newData) {
@@ -58,7 +57,6 @@ ApplicationWindow {
             description = newData.description !== undefined ? newData.description : description;
             tagname = newData.tagname !== undefined ? newData.tagname : tagname;
             location = newData.location !== undefined ? newData.location : location;
-            _updateStatus()
         }
     }
 
@@ -70,12 +68,19 @@ ApplicationWindow {
     property bool _ah2_check : (bcw & 0x10);    //bit4
     property bool _al2_check : (bcw & 0x20);    //bit5
 
-    function _updateStatus() {
-        if (stw & 0x02) status = "Ошибка"
-        else if (stw & 0x08) status = "Авария"
-        else if (stw & 0x04) status = "Предупреждение"
-        else if (stw & 0x01) status = "Норма"
-        else status = "Норма"
+    function _getStatusText() {
+        if (stw & 0x02) return "Ошибка"
+        if (stw & 0x08) return "Авария"
+        if (stw & 0x04) return "Предупреждение"
+        if (stw & 0x01) return "Норма"
+        else return "Unknown"
+    }
+    function _getStatusColor() {
+        if (stw & 0x02) return "#5B6262" //Ошибка
+        if (stw & 0x08) return "#F44336" //Авария
+        if (stw & 0x04) return "#FF9800" //Предупреждение
+        if (stw & 0x01) return "#4CAF50" //Норма
+        return "#5B6262"
     }
 
     //Основной контент
@@ -147,17 +152,13 @@ ApplicationWindow {
                         Layout.preferredHeight: 24
                         color: {
                             if (sim) return "#BF88BF"
-                            if (status === "Норма") return "#4CAF50"
-                            if (status === "Ошибка") return "#5B6262"
-                            if (status === "Предупреждение") return "#FF9800"
-                            if (status === "Авария") return "#F44336"
-                            return "#9E9E9E"
+                            return _getStatusColor()
                         }
                         radius: 12
 
                         Text {
                             anchors.centerIn: parent
-                            text: sim ? "Симуляция" : status.substring(0, 7) //сократили количество символов текста до 6
+                            text: sim ? "Симуляция" : _getStatusText().substring(0, 7) //сократили количество символов текста до 6
                             font.pixelSize: 11
                             font.bold: true
                             color: "white"
@@ -625,15 +626,10 @@ ApplicationWindow {
                         Layout.alignment: Qt.AlignRight
                     }
                     Label {
-                        text: status
+                        text: _getStatusText()
                         font.pixelSize: 12
                         font.bold: true
-                        color: {
-                            if (status === "Норма") return "#4CAF50"
-                            if (status === "Предупреждение") return "#FF9800"
-                            if (status === "Авария") return "#F44336"
-                            return "#9E9E9E"
-                        }
+                        color: _getStatusColor()
                     }
                     Item{}
                     Item{}

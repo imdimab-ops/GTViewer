@@ -1,9 +1,10 @@
 // connectionsLogic.js - скрипт для работы с логикой и обновления UI
 .pragma library
-.import "../components/paramLogic.js" as ParamLogic //импортировал для обновления сразу через JS
+.import "../components/paramLogicAI.js" as ParamLogicAI //импортировал для обновления сразу через JS
+.import "../components/paramLogicMTR.js" as ParamLogicMTR
 
 //хранилище компонентов
-var _componentStore = {}
+var _componentStore = {}  //AI, Motors, Pump, Valves, etc
 var _pglobalPlot = null  //указатель на globalPlot
 var _pappEng = null      //указатель на appEng
 
@@ -16,6 +17,15 @@ function _wordsToBitsToString(value, bitsCount = 16) {
     }
     return result;
 }
+
+//Функция снятия визуализации на элементе (при удалении графиков)(визуализация в контекстном меню)
+function _updateComponentChartIcon(obj, data) {
+    if (!obj || !data) return
+    if (data.symbol === obj.symbol) {
+        obj.addTag = data.addTag
+    }
+}
+
 
 //функция добавления графиков (Берем указатель на график и добавляем графики прямо тут)
 function _addCharForPlot (data) {
@@ -63,44 +73,46 @@ function initializeContext(appEng) {
                                                }
                                                //обновляем ВСЕ компоненты с этим ID
                                                for (var i = 0; i < components.length; i++) {
-                                                   ParamLogic.updateAddToChartIcon(components[i], data) //обновляем компоненты на прямую через JS а не через QML
+                                                   _updateComponentChartIcon(components[i], data) //обновляем компоненты на прямую через JS а не через QML
                                                }
                                            });
 }
 
 //Функция регистрации компонента
 function registerComponent(component) {
-    if (component && component.symbol) {
-        var componentId = component.symbol
-        //если такого ID еще нет, создаем массив
-        if (!_componentStore[componentId]) {
-            _componentStore[componentId] = []
-        }
-        _componentStore[componentId].push(component) //добавляем компонент в массив
-        // console.log("connectionsLogic.js", "Registered component:", component.symbol, component.name, "total:", _componentStore[componentId].length)
+    if (!component && !component.symbol) return
+    var componentId = component.symbol
 
-        //динамически подписываемся на onEmitAddToChart, если он существует
-        if (component.onEmitAddToChart && typeof component.onEmitAddToChart.connect === 'function') {
-            component.onEmitAddToChart.connect((data) => {
-                                                   _addCharForPlot(data)
-                                                   // console.log("connectionsLogic.js", "componentId", componentId, data.name, data.tagname, data.addTag);
-                                               });
-            //заполняем диалоговое окно выбора параметров на графиках
-            if (_pglobalPlot) {
-                _pglobalPlot.fsetFillParameters({
-                                                    //берем первый элемент из массива (их может быть несколько повторяющихся на UI)
-                                                    symbol: component.symbol,
-                                                    name: component.name,
-                                                    tagname: component.tagname
-                                                })
-            }
-            // console.log("Subscribed to onEmitAddToChart for:", componentId);
+    //если такого ID еще нет, создаем массив
+    if (!_componentStore[componentId]) {
+        _componentStore[componentId] = []
+    }
+    _componentStore[componentId].push(component) //добавляем компонент в массив
+    // console.log("connectionsLogic.js", "Registered component:", component.symbol, component.name, "total:", _componentStore[componentId].length)
+
+    //динамически подписываемся на onEmitAddToChart, если он существует
+    if (component.onEmitAddToChart && typeof component.onEmitAddToChart.connect === 'function') {
+        component.onEmitAddToChart.connect((data) => {
+                                               _addCharForPlot(data)
+                                               // console.log("connectionsLogic.js", "componentId", componentId, data.name, data.tagname, data.addTag);
+                                           });
+        //заполняем диалоговое окно выбора параметров на графиках
+        if (_pglobalPlot) {
+            _pglobalPlot.fsetFillParameters({
+                                                //берем первый элемент из массива (их может быть несколько повторяющихся на UI)
+                                                symbol: component.symbol,
+                                                name: component.name,
+                                                tagname: component.tagname
+                                            })
         }
+        // console.log("Subscribed to onEmitAddToChart for:", componentId);
     }
 }
 
-//функция обновления данных
-function handleDataUpdate(arg) {
+//функция обновления данных AI, TAG и тп
+//перебираем весь массив _componentStore, берем все ключи массива, и по совпадающим ключам из структуры arg обновляем компоненты. Дольше!
+function handleDataUpdateAI(arg) {
+    if (!arg) return;
     //метеостанция
     // if (_componentStore.PT908) _componentStore.PT908[0].updateData(arg.PT908)
     // if (_componentStore.AT901) _componentStore.AT901[0].updateData(arg.AT901)
@@ -111,37 +123,43 @@ function handleDataUpdate(arg) {
      * - arg["PT908"] - скобочная нотация (bracket notation) - позволяет использовать переменные */
 
     var store = _componentStore;
-    for (var componentId in store) {
-        if (!store.hasOwnProperty(componentId)) continue //проверяем имеет ли объект указанное свойство
-
+    var keys = Object.keys(store);
+    for (var i = 0; i < keys.length; i++) {
+        var componentId = keys[i];
         var data = arg[componentId];
-        if (!data) continue;
+        if (data === null || data === undefined) continue;
 
         var components = store[componentId];
-        for (var i = 0; i < components.length; i++) {
-            ParamLogic.updateData(components[i], data) //обновляем компоненты на прямую через JS а не через QML
+        for (var j = 0; j < components.length; j++) {
+            ParamLogicAI.updateData(components[j], data) //обновляем компоненты на прямую через JS а не через QML
         }
     }
-
-    //Object.entries(_componentStore) - преобразует объект в массив пар [ключ, значение]
-    // for (const [componentId, components] of Object.entries(_componentStore)) { //components - элемент массива _componentStore, так же является массивом
-    //     if (arg[componentId]) {
-    //         //обновляем ВСЕ компоненты с этим ID
-    //         components.forEach(component => {
-    //                                if (component.updateData) {
-    //                                    component.updateData(arg[componentId])
-    //                                }
-    //                            })
-    //     }
-    // }
     //возвращаем состояния
     return {
-        rotateOn: Number(arg.ST50.pv) >= 300,
-        fireOn: Number(arg.TE71.pv) >= 170,
-        aiKC1:  Number(arg.TE521.pv),
-        aiKC2:  Number(arg.TE522.pv),
-        aiKC3:  Number(arg.TE523.pv),
-        aiKC4:  Number(arg.TE524.pv),
-        aiKC5:  Number(arg.TE525.pv)
+        rotateOn: arg.ST50 && Number(arg.ST50.pv) >= 300,
+        fireOn: arg.TE71 && Number(arg.TE71.pv) >= 170,
+        aiKC1:  arg.TE521 && Number(arg.TE521.pv),
+        aiKC2:  arg.TE522 && Number(arg.TE522.pv),
+        aiKC3:  arg.TE523 && Number(arg.TE523.pv),
+        aiKC4:  arg.TE524 && Number(arg.TE524.pv),
+        aiKC5:  arg.TE525 && Number(arg.TE525.pv)
+    }
+}
+
+//функция обновления Motor, Pump, Vent и тп
+//ищем по полям в переданной структере arg, и обновляем соответствующие компоненты из массива _componentStore по этим Id. Быстрее!
+function handleDataUpdateMTR(arg) {
+    if (!arg) return;
+    var store = _componentStore;
+    for (var id in arg) {
+        var data = arg[id];
+        if (data === null || data === undefined) continue;
+
+        var components = store[id];
+        if (!components) continue;
+
+        for (var j = 0; j < components.length; j++) {
+            ParamLogicMTR.updateData(components[j], data);
+        }
     }
 }

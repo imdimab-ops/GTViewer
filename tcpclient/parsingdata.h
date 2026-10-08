@@ -121,37 +121,45 @@ public:
     }
 };
 
-//Структура состояния электродвигателя
+//Структура состояния электродвигателя Motors, Pump, Valves, etc
 struct MTR {
     Q_GADGET
     Q_PROPERTY(QVariant timestamp MEMBER timestamp)
-    Q_PROPERTY(QVariant state MEMBER state)
     Q_PROPERTY(QVariant mode MEMBER mode)
-    Q_PROPERTY(QVariant tagname MEMBER tagname)
-    Q_PROPERTY(QVariant description MEMBER description)
-    Q_PROPERTY(QVariant worktime MEMBER worktime)
+    Q_PROPERTY(QVariant state MEMBER state)
     Q_PROPERTY(QVariant ctlw MEMBER ctlw)
+    Q_PROPERTY(QVariant diagnw MEMBER diagnw)
+    Q_PROPERTY(QVariant blockw MEMBER blockw)
+    Q_PROPERTY(QVariant load MEMBER load)
+    Q_PROPERTY(QVariant worktime MEMBER worktime)
+    Q_PROPERTY(QVariant description MEMBER description)
+    Q_PROPERTY(QVariant tagname MEMBER tagname)
 public:
     QVariant timestamp;
-    QVariant state;     //emum состояние двигателя (описание в библиотеке PsTechEE Regul)
     QVariant mode;      //enum фактический режим управления
-    QVariant description;
+    QVariant state;     //emum состояние двигателя (описание в библиотеке PsTechEE Regul)
+    QVariant ctlw;      //byte сигналы управления на ВУ см.PsTechEE
+    QVariant diagnw;    //word диагностики неисправностей
+    QVariant blockw;    //dword признаки запретов
+    QVariant load;      //загрузка (по загрузке обновляем метку времени и выводим на график)
     QVariant worktime;  //наработка, ч
-    QVariant ctlw;      //слово сигналов управления
+    QVariant description;
     QVariant tagname;
     bool operator==(const MTR &other) const { //оператор сравнения "==", чтобы moc не ругался
         return timestamp == other.timestamp &&
-               state == other.state &&
                mode == other.mode &&
-               description == other.description &&
-               worktime == other.worktime &&
+               state == other.state &&
                ctlw == other.ctlw &&
+               diagnw == other.diagnw &&
+               blockw == other.blockw &&
+               load == other.load &&
+               worktime == other.worktime &&
+               description == other.description &&
                tagname == other.tagname;
     }
     bool operator!=(const MTR &other) const {
         return !(*this == other);
     }
-
 };
 
 //Структура точки для добавления на график

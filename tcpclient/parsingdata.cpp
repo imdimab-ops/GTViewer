@@ -119,16 +119,19 @@ void ParsingData::parsingMTR(MTR &tag, const QString &str, const QVariantMap &ma
      * - "STATUS" - статус данных
      * - "TIMESTAMP" - метка времени данного значения */
     const QString prefix = QStringLiteral("TAG.MTR.") % str; //% - QStringBuilder, выделение строки происходит быстрее чем QString("TAG.MTCP.%1").arg(str)
-    if (TagValue v = fetchValue(prefix % QStringLiteral(".STATE"), map); v.value.isValid() && v.timestamp.isValid()) {
-        tag.state = v.value;
+    if (TagValue v = fetchValue(prefix % QStringLiteral(".CURRENT.VALUE"), map); v.value.isValid() && v.timestamp.isValid()) {
+        tag.load = v.value;
         tag.timestamp = v.timestamp;
-        tag.tagname = QString(QStringLiteral("MTR.") % str); //пишем имя тега для запроса исторических данных
-        emit tagChanged(tag.tagname, TagValue{tag.timestamp, tag.state});
+        tag.tagname = QString(QStringLiteral("MTR.") % str % QStringLiteral(".CURRENT.VALUE")); //пишем имя тега для запроса исторических данных
+        emit tagChanged(tag.tagname, TagValue{tag.timestamp, tag.load});
     }
-    if (TagValue v = fetchValue(prefix % QStringLiteral(".CTLW"), map); v.value.isValid()) tag.ctlw = v.value;
-    if (TagValue v = fetchValue(prefix % QStringLiteral(".DESCRIPTION"), map); v.value.isValid()) tag.description = v.value;
     if (TagValue v = fetchValue(prefix % QStringLiteral(".MODE"), map); v.value.isValid()) tag.mode = v.value;
+    if (TagValue v = fetchValue(prefix % QStringLiteral(".STATE"), map); v.value.isValid() && v.timestamp.isValid()) tag.state = v.value;
+    if (TagValue v = fetchValue(prefix % QStringLiteral(".CTLW"), map); v.value.isValid()) tag.ctlw = v.value;
+    if (TagValue v = fetchValue(prefix % QStringLiteral(".DIAGN.VALUE"), map); v.value.isValid()) tag.diagnw = v.value;
+    if (TagValue v = fetchValue(prefix % QStringLiteral(".BLOCK.VALUE"), map); v.value.isValid()) tag.blockw = v.value;
     if (TagValue v = fetchValue(prefix % QStringLiteral(".WORKTIME"), map); v.value.isValid()) tag.worktime = v.value;
+    if (TagValue v = fetchValue(prefix % QStringLiteral(".DESCRIPTION"), map); v.value.isValid()) tag.description = v.value;
 }
 
 void ParsingData::currentData(const QVariantMap &map)

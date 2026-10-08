@@ -41,8 +41,8 @@ Item {
 
     Connections {
         target: appEng
-        function onFdataUpdate(arg) {
-            var result = Logic.handleDataUpdate(arg)
+        function onFdataUpdateAI(arg) {
+            var result = Logic.handleDataUpdateAI(arg)
             _rotateOn = result.rotateOn
             _fireOn = result.fireOn
             _aiKC1 = result.aiKC1
@@ -50,6 +50,12 @@ Item {
             _aiKC3 = result.aiKC3
             _aiKC4 = result.aiKC4
             _aiKC5 = result.aiKC5
+        }
+    }
+    Connections {
+        target: appEng
+        function onFdataUpdateMTR(arg) {
+            var result = Logic.handleDataUpdateMTR(arg)
         }
     }
 
@@ -655,9 +661,9 @@ Item {
                 scale: 0.70
                 anchors {
                     top: imgBlock1.top
-                    topMargin: 895
+                    topMargin: 965
                     left: imgBlock1.left
-                    leftMargin: 50
+                    leftMargin: 00
                 }
             }
             AI {
@@ -671,7 +677,7 @@ Item {
                 scale: 0.70
                 anchors {
                     top: imgBlock1.top
-                    topMargin: 945
+                    topMargin: 910
                     left: imgBlock1.left
                     leftMargin: 150
                 }
@@ -770,6 +776,30 @@ Item {
                     topMargin: 770
                     left: imgBlock1.left
                     leftMargin: 620
+                }
+            }
+            PumpLite {
+                name: "Насос масла"
+                symbol: "M201"
+                Component.onCompleted: Logic.registerComponent(this)
+                scale: 0.80
+                anchors {
+                    bottom: imgBlock1.bottom
+                    bottomMargin: 55
+                    left: imgBlock1.left
+                    leftMargin: 185
+                }
+            }
+            PumpLite {
+                name: "Насос масла"
+                symbol: "M202"
+                Component.onCompleted: Logic.registerComponent(this)
+                scale: 0.80
+                anchors {
+                    bottom: imgBlock1.bottom
+                    bottomMargin: 0
+                    left: imgBlock1.left
+                    leftMargin: 185
                 }
             }
             //======================================================
