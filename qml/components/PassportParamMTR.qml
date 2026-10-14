@@ -25,6 +25,8 @@ ApplicationWindow {
     property int ctlw: 0                    // byte сигналы управления на ВУ см.PsTechEE
     property int diagnw: 0                  // word диагностики неисправностей
     property real blockw: 0                 // dword признаки запретов
+    property string diagnd: "descr"
+    property string blockd: "descr"
     property real load: 0.0              // Токовая загрузка
     property real nominalLoad: 100.0     // Номинальная загрузка
     property real worktime: 0            //ч
@@ -47,6 +49,8 @@ ApplicationWindow {
             ctlw = newData.ctlw !== undefined ? newData.ctlw : ctlw;
             diagnw = newData.diagnw !== undefined ? newData.diagnw : diagnw;
             blockw = newData.blockw !== undefined ? newData.blockw : blockw;
+            diagnd = newData.diagnd !== undefined ? newData.diagnd : diagnd;
+            blockd = newData.blockd !== undefined ? newData.blockd : blockd;
             load = newData.load !== undefined ? newData.load : load;
             worktime = newData.worktime !== undefined ? newData.worktime : worktime;
             unit = newData.unit !== undefined ? newData.unit : unit;
@@ -482,7 +486,7 @@ ApplicationWindow {
                                 color: "#333333"
                             }
                             Label {
-                                text: Logic.getCtrlwText(passportWindow)
+                                text: Logic.getCtlwText(passportWindow)
                                 font.pixelSize: 12
                                 font.family: "monospace"
                                 color: "#333333"
@@ -523,7 +527,7 @@ ApplicationWindow {
                                 color: "#333333"
                             }
                             Label {
-                                text: Logic.getDiagnText(passportWindow)
+                                text: diagnd
                                 font.pixelSize: 12
                                 font.family: "monospace"
                                 color: "#333333"
@@ -564,7 +568,7 @@ ApplicationWindow {
                                 color: "#333333"
                             }
                             Label {
-                                text: Logic.getBlockText(passportWindow)
+                                text: blockd
                                 font.pixelSize: 12
                                 font.family: "monospace"
                                 color: "#333333"

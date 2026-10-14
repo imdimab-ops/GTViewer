@@ -25,6 +25,8 @@ Rectangle {
     property int ctlw: 25   //byte сигналы управления на ВУ см.PsTechEE
     property int diagnw: 25   //word диагностика неисправностей см.PsTechEE
     property real blockw: 25  //dword признаки запретов см.PsTechEE (int в qml это 64х битные числа)
+    property string diagnd: "descr"
+    property string blockd: "descr"
     property real load: 0.0
     property real nominalLoad: 100.0
     property real worktime: 25   //ч

@@ -14,6 +14,8 @@ var _propertyConfig = {
     ctlw: Number,
     diagnw: Number,
     blockw: Number,
+    diagnd: v => v,
+    blockd: v => v,
     load: Number,
     worktime: Number,
     timestamp: v => v,
@@ -49,6 +51,8 @@ function _showPassport(obj, path) {
                                     ctlw: obj.ctlw,
                                     diagnw: obj.diagnw,
                                     blockw: obj.blockw,
+                                    diagnd: obj.diagnd,
+                                    blockd: obj.blockd,
                                     load: obj.load,
                                     nominalLoad: obj.nominalLoad,
                                     worktime: obj.worktime,
@@ -118,6 +122,8 @@ function updateData(obj, data) {
                                 ctlw: obj.ctlw,
                                 diagnw: obj.diagnw,
                                 blockw: obj.blockw,
+                                diagnd: obj.diagnd,
+                                blockd: obj.blockd,
                                 load: obj.load,
                                 worktime: obj.worktime,
                                 timestamp: obj.timestamp,
@@ -226,7 +232,7 @@ function getModeText(obj) {
     }
 }
 
-function getCtrlwText(obj) {
+function getCtlwText(obj) {
     if (!obj) return "undefined"
     /*bit0*/    if (obj.ctlw & 0x01) return "Команда «Включить»"
     /*bit1*/    if (obj.ctlw & 0x02) return "Команда «Отключить»"
@@ -242,55 +248,4 @@ function getStateText(obj) {
     case 3: return "Nowork - нерабочее"
     default: return "state: " + obj.state; // неизвестный режим
     }
-}
-
-function getDiagnText(obj) {
-    if (!obj) return "undefined"
-    /*bit0*/    if (obj.diagnw & 0x01) return "ОК"
-    /*bit1*/    if (obj.diagnw & 0x02) return "Обесточен"
-    /*bit2*/    if (obj.diagnw & 0x004) return "Неопределенное состояние"
-    /*bit3*/    if (obj.diagnw & 0x008) return "Нерабочее состояние"
-    /*bit4*/    if (obj.diagnw & 0x010) return "Не включился/Не отключился"
-    /*bit5*/    if (obj.diagnw & 0x020) return "Несанкционированное включение/отключение"
-    /*bit6*/    if (obj.diagnw & 0x040) return "Нет оперативного напряжения"
-    /*bit7*/    if (obj.diagnw & 0x080) return "Нет высокого напряжения"
-    /*bit8*/    if (obj.diagnw & 0x100) return "Неисправность"
-    return "unknown"
-}
-
-function getBlockText(obj) {
-    if (!obj) return "undefined"
-    /*bit0 */   if (obj.blockw & 0x00000001) return "Блокировка включения BS1306.2 Пожар в отсеке"
-    /*bit1 */   if (obj.blockw & 0x00000002) return "Неисправность..."
-    /*bit2 */   if (obj.blockw & 0x00000004) return "Неисправность..."
-    /*bit3 */   if (obj.blockw & 0x00000008) return "Блокировка включения"
-    /*bit4 */   if (obj.blockw & 0x00000010) return "Блокировка включения"
-    /*bit5 */   if (obj.blockw & 0x00000020) return "Блокировка включения"
-    /*bit6 */   if (obj.blockw & 0x00000040) return "..."
-    /*bit7 */   if (obj.blockw & 0x00000080) return "..."
-    /*bit8 */   if (obj.blockw & 0x00000100) return "..."
-    /*bit9 */   if (obj.blockw & 0x00000200) return "..."
-    /*bit10*/   if (obj.blockw & 0x00000400) return "..."
-    /*bit11*/   if (obj.blockw & 0x00000800) return "..."
-    /*bit12*/   if (obj.blockw & 0x00001000) return "..."
-    /*bit13*/   if (obj.blockw & 0x00002000) return "..."
-    /*bit14*/   if (obj.blockw & 0x00004000) return "..."
-    /*bit15*/   if (obj.blockw & 0x00008000) return "..."
-    /*bit16*/   if (obj.blockw & 0x00010000) return "..."
-    /*bit17*/   if (obj.blockw & 0x00020000) return "..."
-    /*bit18*/   if (obj.blockw & 0x00040000) return "..."
-    /*bit19*/   if (obj.blockw & 0x00080000) return "..."
-    /*bit20*/   if (obj.blockw & 0x00100000) return "..."
-    /*bit21*/   if (obj.blockw & 0x00200000) return "..."
-    /*bit22*/   if (obj.blockw & 0x00400000) return "..."
-    /*bit23*/   if (obj.blockw & 0x00800000) return "..."
-    /*bit24*/   if (obj.blockw & 0x01000000) return "..."
-    /*bit25*/   if (obj.blockw & 0x02000000) return "..."
-    /*bit26*/   if (obj.blockw & 0x04000000) return "..."
-    /*bit27*/   if (obj.blockw & 0x08000000) return "..."
-    /*bit28*/   if (obj.blockw & 0x10000000) return "..."
-    /*bit29*/   if (obj.blockw & 0x20000000) return "..."
-    /*bit30*/   if (obj.blockw & 0x40000000) return "..."
-    /*bit31*/   if (obj.blockw & 0x80000000) return "Команда из алгоритма"
-    return "unknown"
 }

@@ -18,6 +18,7 @@ struct STWsrv {
     QVariant client_size = QVariant::fromValue(0);
     QVariant uptime;
 };
+Q_DECLARE_METATYPE(STWsrv)
 
 struct Event {
     QVariant id;
@@ -35,6 +36,7 @@ struct Event {
         return !(*this == other);
     }
 };
+Q_DECLARE_METATYPE(Event)
 
 //Структура аналогового сигнала
 struct AI {
@@ -97,6 +99,7 @@ public:
         return !(*this == other);
     }
 };
+Q_DECLARE_METATYPE(AI)
 
 //Структура параметра TAG (ModbusTCP, и тд...)
 struct TAG {
@@ -120,6 +123,7 @@ public:
         return !(*this == other);
     }
 };
+Q_DECLARE_METATYPE(TAG)
 
 //Структура состояния электродвигателя Motors, Pump, Valves, etc
 struct MTR {
@@ -130,6 +134,8 @@ struct MTR {
     Q_PROPERTY(QVariant ctlw MEMBER ctlw)
     Q_PROPERTY(QVariant diagnw MEMBER diagnw)
     Q_PROPERTY(QVariant blockw MEMBER blockw)
+    Q_PROPERTY(QVariant diagnd MEMBER diagnd)
+    Q_PROPERTY(QVariant blockd MEMBER blockd)
     Q_PROPERTY(QVariant load MEMBER load)
     Q_PROPERTY(QVariant worktime MEMBER worktime)
     Q_PROPERTY(QVariant description MEMBER description)
@@ -141,6 +147,8 @@ public:
     QVariant ctlw;      //byte сигналы управления на ВУ см.PsTechEE
     QVariant diagnw;    //word диагностики неисправностей
     QVariant blockw;    //dword признаки запретов
+    QVariant diagnd;    //description
+    QVariant blockd;    //description
     QVariant load;      //загрузка (по загрузке обновляем метку времени и выводим на график)
     QVariant worktime;  //наработка, ч
     QVariant description;
@@ -152,6 +160,8 @@ public:
                ctlw == other.ctlw &&
                diagnw == other.diagnw &&
                blockw == other.blockw &&
+               diagnd == other.diagnd &&
+               blockd == other.blockd &&
                load == other.load &&
                worktime == other.worktime &&
                description == other.description &&
@@ -161,12 +171,14 @@ public:
         return !(*this == other);
     }
 };
+Q_DECLARE_METATYPE(MTR)
 
 //Структура точки для добавления на график
 struct TagValue {
     QVariant timestamp;
     QVariant value;
 };
+Q_DECLARE_METATYPE(TagValue)
 
 struct Data {
     Q_GADGET  //Макрос для QML-доступа без наследования от QObject (при обновлении полей структуры не работают сигналы и слоты, обновлять в ручную!)
@@ -360,6 +372,7 @@ public:
     TAG STEP_DESCR; //Описание действий на шаге
     TAG COUNTDOWN;  //Обратный отсчет шагов
 };
+Q_DECLARE_METATYPE(Data)
 
 struct DataMTR {
     Q_GADGET  //Макрос для QML-доступа без наследования от QObject (при обновлении полей структуры не работают сигналы и слоты, обновлять в ручную!)
@@ -370,6 +383,7 @@ public:
     MTR M201;   //насос масла 1
     MTR M202;   //насос масла 2
 };
+Q_DECLARE_METATYPE(DataMTR)
 
 class ParsingData : public QObject
 {

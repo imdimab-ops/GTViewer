@@ -129,7 +129,9 @@ void ParsingData::parsingMTR(MTR &tag, const QString &str, const QVariantMap &ma
     if (TagValue v = fetchValue(prefix % QStringLiteral(".STATE"), map); v.value.isValid() && v.timestamp.isValid()) tag.state = v.value;
     if (TagValue v = fetchValue(prefix % QStringLiteral(".CTLW"), map); v.value.isValid()) tag.ctlw = v.value;
     if (TagValue v = fetchValue(prefix % QStringLiteral(".DIAGN.VALUE"), map); v.value.isValid()) tag.diagnw = v.value;
+    if (TagValue v = fetchValue(prefix % QStringLiteral(".DIAGN.DESCRIPTION"), map); v.value.isValid()) tag.diagnd = v.value;
     if (TagValue v = fetchValue(prefix % QStringLiteral(".BLOCK.VALUE"), map); v.value.isValid()) tag.blockw = v.value;
+    if (TagValue v = fetchValue(prefix % QStringLiteral(".BLOCK.DESCRIPTION"), map); v.value.isValid()) tag.blockd = v.value;
     if (TagValue v = fetchValue(prefix % QStringLiteral(".WORKTIME"), map); v.value.isValid()) tag.worktime = v.value;
     if (TagValue v = fetchValue(prefix % QStringLiteral(".DESCRIPTION"), map); v.value.isValid()) tag.description = v.value;
 }
