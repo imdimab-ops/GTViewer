@@ -291,6 +291,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="pb_ms">
+         <property name="text">
+          <string>MS</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pb_events">
          <property name="text">
           <string>Message</string>

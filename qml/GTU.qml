@@ -4,7 +4,7 @@ import QtQuick.Window
 import QtQuick.Layouts
 import QtQuick.Shapes
 import "./components"
-import "./js/connectionsLogic.js" as Logic
+import "./js/connectionsLogicGTU.js" as Logic
 
 //Перемещаем изображение после масштабирования
 Item {

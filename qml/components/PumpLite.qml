@@ -36,6 +36,12 @@ Rectangle {
     property string tagname: "pump1"
     property bool addTag: false       // True - тег добавлен на график, false - нет
 
+    // Направление потока:
+    //   "right" — вход слева,  выход справа
+    //   "left"  — вход справа, выход слева
+    // Любое значение, отличное от "left", трактуется как "right".
+    property string flowDirection: "right"
+
     signal emitAddToChart(var data)
     signal clicked()
 
@@ -159,6 +165,13 @@ Rectangle {
             Layout.maximumHeight: 30
             Layout.topMargin: 0
             Layout.bottomMargin: 0
+
+            // Зеркалим всю гидравлику при направлении "left".
+            transform: Scale {
+                origin.x: pumpArea.width / 2
+                origin.y: pumpArea.height / 2
+                xScale: root.flowDirection !== "left" ? 1 : -1
+            }
 
             // ---------- ВСАСЫВАЮЩИЙ ПАТРУБОК (слева, горизонтальный) ----------
             Rectangle {
@@ -301,7 +314,86 @@ Rectangle {
             }
 
             // ---------- АНИМАЦИЯ ПОТОКА ----------
-            Row {
+            // Бегущие точки в клип-контейнере по размеру патрубка.
+            // В локальных координатах обе линии текут в +x
+            // (к насосу на всасывании, от насоса на напоре).
+            // При flowDirection === "left" весь блок зеркалится
+
+            // ----- Поток во всасывающем патрубке -----
+            Item {
+                id: suctionFlow
+                x: suctionPipe.x
+                y: suctionPipe.y
+                width: suctionPipe.width
+                height: suctionPipe.height
+                clip: true
+                visible: _flowActive()
+
+                Row {
+                    id: suctionFlowRow
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 5
+
+                    Repeater {
+                        // покрываем ширину + один период с запасом
+                        model: Math.ceil((suctionFlow.width + 8) / 8) + 1
+                        Rectangle {
+                            width: 3; height: 4
+                            radius: 1
+                            color: root._liquidColor
+                            opacity: 0.85
+                        }
+                    }
+
+                    // Плавное «втягивание» к насосу
+                    NumberAnimation on x {
+                        running: _flowActive()
+                        loops: Animation.Infinite
+                        from: -8
+                        to: 0
+                        duration: 400
+                    }
+                }
+            }
+
+            // ----- Поток в напорном патрубке -----
+            Item {
+                id: dischargeFlow
+                x: dischargePipe.x
+                y: dischargePipe.y
+                width: dischargePipe.width
+                height: dischargePipe.height
+                clip: true
+                visible: _flowActive()
+
+                Row {
+                    id: dischargeFlowRow
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 5
+
+                    Repeater {
+                        model: Math.ceil((dischargeFlow.width + 8) / 8) + 1
+                        Rectangle {
+                            width: 3; height: 4
+                            radius: 1
+                            color: root._liquidColor
+                            opacity: 0.9
+                        }
+                    }
+
+                    // Напор быстрее всасывания — визуальный «разгон» на выходе
+                    NumberAnimation on x {
+                        running: _flowActive()
+                        loops: Animation.Infinite
+                        from: -8
+                        to: 0
+                        duration: 350
+                    }
+                }
+            }
+
+            // ---------- АНИМАЦИЯ ПОТОКА ----------
+            /*Row {
                 id: suctionFlow
                 x: suctionPipe.x + 3
                 y: suctionPipe.y + 2.5
@@ -346,7 +438,7 @@ Rectangle {
                         }
                     }
                 }
-            }
+            }*/
 
             // ---------- СТРЕЛКА ПОТОКА под правым (напорным) патрубком ----------
             Canvas {

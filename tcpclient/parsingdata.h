@@ -202,7 +202,12 @@ struct Data {
     Q_PROPERTY(AI PDT204 MEMBER PDT204)
     Q_PROPERTY(AI PT206B MEMBER PT206B)
     Q_PROPERTY(AI PT206A MEMBER PT206A)
+    Q_PROPERTY(AI PT211 MEMBER PT211)
+    Q_PROPERTY(AI TT201 MEMBER TT201)
+    Q_PROPERTY(AI TT202 MEMBER TT202)
+    Q_PROPERTY(AI TT203 MEMBER TT203)
     Q_PROPERTY(AI TT205 MEMBER TT205)
+    Q_PROPERTY(AI FT201 MEMBER FT201)
     Q_PROPERTY(AI TT206 MEMBER TT206)
     Q_PROPERTY(AI TT207 MEMBER TT207)
     //GTU
@@ -293,11 +298,16 @@ public:
     //Маслосистема
     AI LT201;   //Уровень масла
     AI TT204;   //Tмасла МБ
-    AI PT203;   //Рм
+    AI PT203;   //Рм вых НМС
     AI PDT204;  //Перепад
     AI PT206B;  //Рм ГТД_2
     AI PT206A;  //Рм ГТД_1
-    AI TT205;   //Тмвых АВОМ
+    AI PT211;   //Рм вх АВОМ
+    AI TT201;   //Тмвх АВОМ
+    AI TT202;   //Тмвых АВОМ
+    AI TT203;   //Ттеплообмен АВОМ
+    AI TT205;   //Тм после АВОМ
+    AI FT201;   //Расход масла
     AI TT206;   //Tмвых ред
     AI TT207;   //Tмвых ГТД
     //GTU
@@ -379,9 +389,31 @@ struct DataMTR {
     //Насосы
     Q_PROPERTY(MTR M201 MEMBER M201) //для обновления данных в QML (иначе undefined)
     Q_PROPERTY(MTR M202 MEMBER M202)
+    Q_PROPERTY(MTR M1_AC1 MEMBER M1_AC1)
+    Q_PROPERTY(MTR M1_AC2 MEMBER M1_AC2)
+    Q_PROPERTY(MTR M1 MEMBER M1)
+    Q_PROPERTY(MTR M2 MEMBER M2)
+    Q_PROPERTY(MTR M3 MEMBER M3)
+    Q_PROPERTY(MTR M4 MEMBER M4)
+    Q_PROPERTY(MTR EK201 MEMBER EK201)
+    Q_PROPERTY(MTR EK202 MEMBER EK202)
+    Q_PROPERTY(MTR AC1 MEMBER AC1)
+    Q_PROPERTY(MTR AC2 MEMBER AC2)
+    Q_PROPERTY(MTR EK203_205 MEMBER EK203_205)
 public:
     MTR M201;   //насос масла 1
     MTR M202;   //насос масла 2
+    MTR M1_AC1; //вентилятор
+    MTR M1_AC2; //--//--
+    MTR M1;     //--//--
+    MTR M2;     //--//--
+    MTR M3;     //--//--
+    MTR M4;     //--//--
+    MTR EK201;  //ЭНБМ1
+    MTR EK202;  //ЭНБМ2
+    MTR AC1;    //ЭКМО1
+    MTR AC2;    //ЭКМО2
+    MTR EK203_205;    //ЭКМО1
 };
 Q_DECLARE_METATYPE(DataMTR)
 

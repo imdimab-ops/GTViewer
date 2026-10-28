@@ -71,10 +71,15 @@ qt_add_resources(GTViewer Resources
     FILES
     "qml/Main.qml"
     "qml/GTU.qml"
+    "qml/MS.qml"
 
     "qml/components/AI.qml"
     "qml/components/AIpbv.qml"
+    "qml/components/Pump.qml"
     "qml/components/PumpLite.qml"
+    "qml/components/Fan.qml"
+    "qml/components/HeaterH.qml"
+    "qml/components/HeaterV.qml"
     "qml/components/ContextMenu.qml"
     "qml/components/PassportParamAI.qml"
     "qml/components/PassportParamMTR.qml"
@@ -93,8 +98,10 @@ qt_add_resources(GTViewer Resources
     "qml/img/gtu/firecam.gif"
     "qml/img/gtu/rotate.gif"
     "qml/img/gtu/turboFireEx.svg"
+    "qml/img/ms/base.svg"
 
-    "qml/js/connectionsLogic.js"
+    "qml/js/connectionsLogicGTU.js"
+    "qml/js/connectionsLogicMS.js"
     "qml/components/paramLogicAI.js"
     "qml/components/paramLogicMTR.js"
 

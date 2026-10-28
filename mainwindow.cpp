@@ -116,6 +116,7 @@ void MainWindow::setupQML()
     //инициализируем QML виджет, создаем Хэш
     createQmlMnemonic("MAIN", QUrl("qrc:/qml/Main.qml"));
     createQmlMnemonic("GTU", QUrl("qrc:/qml/GTU.qml"));
+    createQmlMnemonic("MS", QUrl("qrc:/qml/MS.qml"));
 
     ui->stackedWidget->addWidget(m_scrollArea);
 
@@ -167,6 +168,9 @@ void MainWindow::setupConnections()
     });
     connect(ui->pb_gtu, &QPushButton::clicked, this, [this](){
         changeQmlMnemonic("GTU");
+    });
+    connect(ui->pb_ms, &QPushButton::clicked, this, [this](){
+        changeQmlMnemonic("MS");
     });
     connect(ui->pb_events, &QPushButton::clicked, this, [this](){
         this->setWindowTitle("SCADA - " + m_messageWidget->windowTitle());    //обновляем заголовок окна

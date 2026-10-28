@@ -176,7 +176,12 @@ void ParsingData::currentData(const QVariantMap &map)
     parsingAI(m_data.PDT204, "PDT204", map);
     parsingAI(m_data.PT206B, "PT206B", map);
     parsingAI(m_data.PT206A, "PT206A", map);
+    parsingAI(m_data.PT211, "PT211", map);
+    parsingAI(m_data.TT201, "TT201", map);
+    parsingAI(m_data.TT202, "TT202", map);
+    parsingAI(m_data.TT203, "TT203", map);
     parsingAI(m_data.TT205, "TT205", map);
+    parsingAI(m_data.FT201, "FT201", map);
     parsingAI(m_data.TT206, "TT206", map);
     parsingAI(m_data.TT207, "TT207", map);
     //GTU
@@ -255,6 +260,17 @@ void ParsingData::currentData(const QVariantMap &map)
     //Motors
     parsingMTR(m_dataMTR.M201, "M201", map);
     parsingMTR(m_dataMTR.M202, "M202", map);
+    parsingMTR(m_dataMTR.M1_AC1, "M1_AC1", map);
+    parsingMTR(m_dataMTR.M1_AC2, "M1_AC2", map);
+    parsingMTR(m_dataMTR.M1, "M1", map);
+    parsingMTR(m_dataMTR.M2, "M2", map);
+    parsingMTR(m_dataMTR.M3, "M3", map);
+    parsingMTR(m_dataMTR.M4, "M4", map);
+    parsingMTR(m_dataMTR.EK201, "EK201", map);
+    parsingMTR(m_dataMTR.EK202, "EK202", map);
+    parsingMTR(m_dataMTR.AC1, "AC1", map);
+    parsingMTR(m_dataMTR.AC2, "AC2", map);
+    parsingMTR(m_dataMTR.EK203_205, "EK203_205", map);
 
     if (m_throttleTimer && !m_throttleTimer->isActive()) {
         m_throttleTimer->start();

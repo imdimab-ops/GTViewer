@@ -29,7 +29,7 @@ function _updateComponentChartIcon(obj, data) {
 
 //функция добавления графиков (Берем указатель на график и добавляем графики прямо тут)
 function _addCharForPlot (data) {
-    if (_pglobalPlot) {
+    if (_pglobalPlot && data) {
         _pglobalPlot.fsetAddGraph(data)
     } else {
         console.error("CustomPlotSingleton is null!")
@@ -41,15 +41,16 @@ function _addCharForPlot (data) {
 function initializeContext(appEng) {
     _pappEng = appEng
     _pglobalPlot = _pappEng.fpgetCustomPlot()
-    console.log("connectionsLogic.js", "initializeContext _pappEng", _pappEng)
+    console.log("connectionsLogicMS.js", "initializeContext _pappEng", _pappEng)
     if (!_pglobalPlot) return
 
     //сигнал добавления графика со стороны Widget (окно выбора графиков)
     _pglobalPlot.onFemitAddGraphW.connect((data) => {
+                                              if (!data) return;
                                               //поиск компонентов по symbol
                                               var components = _componentStore[data.symbol];
                                               if (!components || components.length === 0) {
-                                                  console.warn("connectionsLogic.js", "No components found for symbol:", data.symbol);
+                                                  console.warn("connectionsLogicMS.js", "No components found for symbol:", data.symbol);
                                                   return;
                                               }
                                               //берем tagname из самого элемента т.к. виджет с тегами не хранит данную информацию
@@ -61,14 +62,14 @@ function initializeContext(appEng) {
                                                                   description: components[0].description,
                                                                   tagname: components[0].tagname
                                                               })
-                                              // console.log("connectionsLogic.js", "Found", components.length, "components for symbol:", data.symbol, components[0].tagname);
                                           });
     //сигнал состояния графика добавлен/удален для обновления компонентов *.qml
     _pglobalPlot.onFemitStateGgaph.connect((data) => {
+                                               if (!data) return;
                                                //поиск компонентов по symbol
                                                var components = _componentStore[data.symbol];
                                                if (!components || components.length === 0) {
-                                                   console.warn("connectionsLogic.js", "No components found for symbol:", data.symbol);
+                                                   console.warn("connectionsLogicMS.js", "No components found for symbol:", data.symbol);
                                                    return;
                                                }
                                                //обновляем ВСЕ компоненты с этим ID
@@ -105,7 +106,6 @@ function registerComponent(component) {
                                                 tagname: component.tagname
                                             })
         }
-        // console.log("Subscribed to onEmitAddToChart for:", componentId);
     }
 }
 
@@ -113,15 +113,6 @@ function registerComponent(component) {
 //перебираем весь массив _componentStore, берем все ключи массива, и по совпадающим ключам из структуры arg обновляем компоненты. Дольше!
 function handleDataUpdateAI(arg) {
     if (!arg) return;
-    //метеостанция
-    // if (_componentStore.PT908) _componentStore.PT908[0].updateData(arg.PT908)
-    // if (_componentStore.AT901) _componentStore.AT901[0].updateData(arg.AT901)
-    // if (_componentStore.TT903) _componentStore.TT903[0].updateData(arg.TT903)
-
-    /* Обращение в JavaScript к элементам:
-     * - arg.PT908 - точечная нотация (dot notation)
-     * - arg["PT908"] - скобочная нотация (bracket notation) - позволяет использовать переменные */
-
     var store = _componentStore;
     var keys = Object.keys(store);
     for (var i = 0; i < keys.length; i++) {
@@ -133,16 +124,6 @@ function handleDataUpdateAI(arg) {
         for (var j = 0; j < components.length; j++) {
             ParamLogicAI.updateData(components[j], data) //обновляем компоненты на прямую через JS а не через QML
         }
-    }
-    //возвращаем состояния
-    return {
-        rotateOn: arg.ST50 && Number(arg.ST50.pv) >= 300,
-        fireOn: arg.TE71 && Number(arg.TE71.pv) >= 170,
-        aiKC1:  arg.TE521 && Number(arg.TE521.pv),
-        aiKC2:  arg.TE522 && Number(arg.TE522.pv),
-        aiKC3:  arg.TE523 && Number(arg.TE523.pv),
-        aiKC4:  arg.TE524 && Number(arg.TE524.pv),
-        aiKC5:  arg.TE525 && Number(arg.TE525.pv)
     }
 }
 
