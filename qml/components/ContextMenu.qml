@@ -19,7 +19,9 @@ Menu {
 
     function _showItem_1(obj) {
         if (!obj) return false
-        return obj.type === "AI" | obj.type === "MTR"
+        //Object.prototype.hasOwnProperty.call(obj, "exist_freq") проверяем есть ли свойство exist_freq у объекта
+        if (Object.prototype.hasOwnProperty.call(obj, "exist_freq") && obj.exist_freq === false) return false;
+        return obj.type === "AI" || obj.type === "MTR"
     }
 
     //Заголовок

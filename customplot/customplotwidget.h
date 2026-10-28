@@ -15,6 +15,7 @@ struct PlotMetadata {
     QString unit; //еденицы измерения
     QString description; //еденицы измерения
     QString tagname;
+    QVariantMap map; //эти же структуры, упакованные в map, для передачи в разные qml движки
 };
 //Для легенды
 struct TableItem {

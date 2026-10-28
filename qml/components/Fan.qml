@@ -177,9 +177,9 @@ Rectangle {
             // ----- Поток всас -----
             Item {
                 id: suctionFlow
-                x: valrotation === 0 | valrotation === 180 ? pumpArea.width/2 - pumpArea.height - 30 : pumpArea.width/2 - pumpArea.height
+                x: valrotation === 0 || valrotation === 180 ? pumpArea.width/2 - pumpArea.height - 30 : pumpArea.width/2 - pumpArea.height
                 y: 0
-                width: valrotation === 0 | valrotation === 180 ? pumpArea.height + 30 : pumpArea.height
+                width: valrotation === 0 || valrotation === 180 ? pumpArea.height + 30 : pumpArea.height
                 height: pumpArea.height
                 clip: true
                 visible: _flowActive()
@@ -240,7 +240,7 @@ Rectangle {
                 id: dischargeFlow
                 x: pumpArea.width/2
                 y: 0
-                width: valrotation === 0 | valrotation === 180 ? pumpArea.height + 30 : pumpArea.height
+                width: valrotation === 0 || valrotation === 180 ? pumpArea.height + 30 : pumpArea.height
                 height: pumpArea.height
                 clip: true
                 visible: _flowActive()

@@ -335,7 +335,6 @@ Item {
                         valrotation: 0
                     }
                     HeaterV {
-                        type: 'MTR_nofc' //отключает контекст добавления на график
                         name: "ЭКМО1"
                         symbol: "AC1"
                         Component.onCompleted: Logic.registerComponent(this)
@@ -356,7 +355,6 @@ Item {
                         valrotation: 0
                     }
                     HeaterV {
-                        type: 'MTR_nofc' //отключает контекст добавления на график
                         name: "ЭКМО2"
                         symbol: "AC2"
                         Component.onCompleted: Logic.registerComponent(this)
@@ -368,7 +366,6 @@ Item {
 
             }
             HeaterV {
-                type: 'MTR_nofc' //отключает контекст добавления на график
                 name: "EK205"
                 symbol: "EK203_205"
                 Component.onCompleted: Logic.registerComponent(this)
@@ -383,7 +380,6 @@ Item {
                 }
             }
             HeaterV {
-                type: 'MTR_nofc' //отключает контекст добавления на график
                 name: "EK203"
                 symbol: "EK203_205"
                 Component.onCompleted: Logic.registerComponent(this)
@@ -398,7 +394,6 @@ Item {
                 }
             }
             HeaterH {
-                type: 'MTR_nofc' //отключает контекст добавления на график
                 name: "EK204"
                 symbol: "EK203_205"
                 Component.onCompleted: Logic.registerComponent(this)
@@ -431,7 +426,6 @@ Item {
                     exist_freq: true
                 }
                 Fan {
-                    type: 'MTR_nofc' //отключает контекст добавления на график
                     name: "ВМО2"
                     symbol: "M2"
                     Component.onCompleted: Logic.registerComponent(this)
@@ -448,7 +442,6 @@ Item {
                     exist_freq: true
                 }
                 Fan {
-                    type: 'MTR_nofc' //отключает контекст добавления на график
                     name: "ВМО4"
                     symbol: "M4"
                     Component.onCompleted: Logic.registerComponent(this)
@@ -468,7 +461,6 @@ Item {
                     leftMargin: 1573
                 }
                 HeaterH {
-                    type: 'MTR_nofc' //отключает контекст добавления на график
                     name: "ЭНБМ1"
                     symbol: "EK201"
                     Component.onCompleted: Logic.registerComponent(this)
@@ -477,7 +469,6 @@ Item {
                     exist_freq: false
                 }
                 HeaterH {
-                    type: 'MTR_nofc' //отключает контекст добавления на график
                     name: "ЭНБМ2"
                     symbol: "EK202"
                     Component.onCompleted: Logic.registerComponent(this)

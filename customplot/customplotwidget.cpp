@@ -1,4 +1,5 @@
 #include "customplotwidget.h"
+#include <qjsvalue.h>
 
 CustomPlotWidget::CustomPlotWidget(QWidget *parent)
     : QWidget{parent}
@@ -1023,19 +1024,27 @@ bool CustomPlotWidget::eventFilter(QObject *obj, QEvent *event)
 
 PlotMetadata CustomPlotWidget::parsePlotMetadata(const QVariant &var)
 {
+    /* Граница "JS → C++": QVariant из JS может содержать QJSValue,
+     * привязанную к конкретному QQmlEngine. Её нельзя хранить/эмитить
+     * в другой движок Ошибка: "JSValue can't be reassigned to another engine"
+     * передается пустой объект "undefined".
+     * Поэтому сразу разворачиваем в движок-нейтральный QVariantMap. */
+
     PlotMetadata plotMetadata;
-    if (!var.canConvert<QVariantMap>()) {
+    if (var.canConvert<QVariantMap>()) {
+        plotMetadata.map = var.toMap();          // QJSValue → QVariantMap, чистый C++
+    } else if (var.canConvert<QJSValue>()) {
+        plotMetadata.map = var.value<QJSValue>().toVariant().toMap();
+    } else {
         qWarning() << Q_FUNC_INFO << "Invalid QVariant type, expected QVariantMap";
         return plotMetadata;
     }
-    QVariantMap map = var.toMap();
-
-    plotMetadata.added = map.value("addTag", false).toBool();
-    plotMetadata.symbol = map.value("symbol", QString()).toString();
-    plotMetadata.name = map.value("name", QString()).toString();
-    plotMetadata.unit = map.value("unit", QString()).toString();
-    plotMetadata.description = map.value("description", QString()).toString();
-    plotMetadata.tagname = map.value("tagname", QString()).toString();
+    plotMetadata.added = plotMetadata.map.value("addTag", false).toBool();
+    plotMetadata.symbol = plotMetadata.map.value("symbol", QString()).toString();
+    plotMetadata.name = plotMetadata.map.value("name", QString()).toString();
+    plotMetadata.unit = plotMetadata.map.value("unit", QString()).toString();
+    plotMetadata.description = plotMetadata.map.value("description", QString()).toString();
+    plotMetadata.tagname = plotMetadata.map.value("tagname", QString()).toString();
     return plotMetadata;
 }
 
@@ -1070,7 +1079,7 @@ void CustomPlotWidget::fsetAddGraph(const QVariant &var)
         if (addGraph(metadata)) {
             TcpThread *client = TcpThread::getInstance();
             emit client->clientRequest(metadata.tagname); //формируем запрос истории с сервера
-            emit femitStateGgaph(var); //испускаем сигнал для обновления UI
+            emit femitStateGgaph(metadata.map); //испускаем сигнал для обновления UI, чистый С++ для обновления разных QQmlEngine
         } else {
             //если график не добавлен испускаем сигнал что график не добавлен
             emit femitStateGgaph(QVariantMap{
@@ -1083,7 +1092,7 @@ void CustomPlotWidget::fsetAddGraph(const QVariant &var)
     }
     if (graph && !metadata.added) {
         removeGraph(graph);
-        emit femitStateGgaph(var); //испускаем сигнал для обновления UI
+        emit femitStateGgaph(metadata.map); //испускаем сигнал для обновления UI, чистый С++ для обновления разных QQmlEngine
     }
     qDebug() << Q_FUNC_INFO << metadata.added << metadata.symbol << metadata.name << metadata.tagname;
 }

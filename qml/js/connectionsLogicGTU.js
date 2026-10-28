@@ -1,5 +1,5 @@
 // connectionsLogic.js - скрипт для работы с логикой и обновления UI
-.pragma library
+.pragma library //один экземпляр
 .import "../components/paramLogicAI.js" as ParamLogicAI //импортировал для обновления сразу через JS
 .import "../components/paramLogicMTR.js" as ParamLogicMTR
 
