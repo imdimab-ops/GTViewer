@@ -19,6 +19,17 @@ UiTcpClient::~UiTcpClient()
 
 void UiTcpClient::setupUI()
 {
+    // ---- Объединённый QSS для всего окна ----
+    // Применяется один раз к this; Qt сам применит правила ко всем потомкам.
+    // QAction не является QWidget — стилизуется через QMenu / QMenuBar / QToolBar.
+    const QString qss = R"(
+    /* ---------- Кнопки ---------- */
+    QPushButton            { color: #000000; }
+    QPushButton:disabled   { color: #505050; }
+    QToolButton            { color: #000000; }
+    QToolButton:disabled   { color: #505050; })";
+    this->setStyleSheet(qss);
+
     //валидатор
     QRegularExpression ipRegex(
         "^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."

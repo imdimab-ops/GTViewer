@@ -18,6 +18,40 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupUI()
 {
+    // ---- Объединённый QSS для всего окна ----
+    // Применяется один раз к this; Qt сам применит правила ко всем потомкам.
+    // QAction не является QWidget — стилизуется через QMenu / QMenuBar / QToolBar.
+    const QString qss = R"(
+    /* ---------- Кнопки ---------- */
+    QPushButton            { color: #000000; }
+    QPushButton:disabled   { color: #505050; }
+    QToolButton            { color: #000000; }
+    QToolButton:disabled   { color: #505050; }
+
+    /* ---------- Менюбар ---------- */
+    QMenuBar               { background-color: #F0F0F0; color: #000000; }
+    QMenuBar::item         { background: transparent; color: #000000; padding: 8px 10px; }
+    QMenuBar::item:selected{ background: #308CC6; color: #FFFFFF; }
+    QMenuBar::item:pressed { background: #308CC6; color: #FFFFFF; }
+
+    /* ---------- Меню (пункты QAction) ---------- */
+    QMenu                  { background-color: #FFFFFF; color: #000000; padding: 6px 4px; }
+    QMenu::item            { color: #000000; padding: 5px 20px 5px 4px; }
+    QMenu::icon            { padding-left: 2px; padding-right: 2px;}
+    QMenu::item:disabled   { color: #505050; }
+    QMenu::item:selected   { background: #308CC6; color: #D2D0D0; }
+    QMenu::separator       { height: 1px; background: #D0D0D0; margin: 4px 8px; }
+
+    /* ---------- Тулбары ---------- */
+    QToolBar               { background: #F0F0F0; }
+    QToolBar QToolButton   { color: #000000; }
+    QToolBar QToolButton:disabled { color: #505050; })";
+    this->setStyleSheet(qss);
+
+    // ---- Применяем один раз ----
+    menuBar()->setNativeMenuBar(false);   //критично на Windows, иначе QSS менюбара игнорируется
+    this->setStyleSheet(qss);
+
     ui->actionQuit->setIcon(QIcon(":img/icon/mainmenu/close.svg"));
     ui->actionSystemLog->setIcon(QIcon(":img/icon/mainmenu/systemlog.svg"));
     ui->actionStatistics->setIcon(QIcon(":img/icon/mainmenu/statistics.svg"));

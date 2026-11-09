@@ -17,6 +17,17 @@ UiSystemLog::~UiSystemLog()
 
 void UiSystemLog::settingsUI()
 {
+    // ---- Объединённый QSS для всего окна ----
+    // Применяется один раз к this; Qt сам применит правила ко всем потомкам.
+    // QAction не является QWidget — стилизуется через QMenu / QMenuBar / QToolBar.
+    const QString qss = R"(
+    /* ---------- Кнопки ---------- */
+    QPushButton            { color: #000000; }
+    QPushButton:disabled   { color: #505050; }
+    QToolButton            { color: #000000; }
+    QToolButton:disabled   { color: #505050; })";
+    this->setStyleSheet(qss);
+
     ui->pb_clear->setIcon(QIcon(":img/icon/clean.svg"));
     ui->pb_close->setIcon(QIcon(":img/icon/mainmenu/close.svg"));
 
